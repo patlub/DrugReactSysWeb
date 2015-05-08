@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Manager</title>
+    <script src="codebase/dhtmlx.js"></script>
+    <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
+    <style>
+        html, body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0px;
+        }
+
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    dhtmlxEvent(window,"load",function(){
+        //Layout
+        var myLayout = new dhtmlXLayoutObject(document.body, "2U");
+        myLayout.cells("a").setWidth(250);
+        myLayout.cells("a").setText("Files");
+        myLayout.cells("b").hideHeader();
+
+        //Toolbar
+        var myToolbar = myLayout.attachToolbar();
+        myToolbar.setIconsPath("icons/");
+        myToolbar.loadStruct("data/toolbarStruct.xml");
+
+        //tree
+        var myTree = myLayout.cells("a").attachTree();
+        myTree.setImagePath("codebase/imgs/");
+        myTree.attachEvent("onSelect", function(id){
+            if(id=="football") {
+                var footballGrid = myLayout.cells("b").attachGrid();
+                footballGrid.setImagePath("codebase/imgs/");
+                footballGrid.setIconsPath("icons/");
+                footballGrid.setHeader("&nbsp;,Name,Rating,Modified");
+                footballGrid.setColTypes("img,ro,ro,ro");
+                footballGrid.setInitWidths("70,250,100,*,0");
+                footballGrid.setColAlign("center,left,left,left");
+                footballGrid.init();
+                footballGrid.load("data/footballData.xml");
+
+            }
+            else if(id=="tennis"){
+                var tennisGrid = myLayout.cells("b").attachGrid();
+                tennisGrid.setImagePath("codebase/imgs/");
+                tennisGrid.setIconsPath("icons/");
+                tennisGrid.setHeader("&nbsp;,Name,Rating,Modified");
+                tennisGrid.setColTypes("img,ro,ro,ro");
+                tennisGrid.setInitWidths("70,250,100,*,0");
+                tennisGrid.setColAlign("center,left,left,left");
+                tennisGrid.init();
+                tennisGrid.load("data/tennisData.xml");
+
+            }
+
+            else if(id=="formula"){
+                var formulaGrid = myLayout.cells("b").attachGrid();
+                formulaGrid.setImagePath("codebase/imgs/");
+                formulaGrid.setIconsPath("icons/");
+                formulaGrid.setHeader("&nbsp;,Name,Rating,Modified");
+                formulaGrid.setColTypes("img,ro,ro,ro");
+                formulaGrid.setInitWidths("70,250,100,*,0");
+                formulaGrid.setColAlign("center,left,left,left");
+                formulaGrid.init();
+                formulaGrid.load("data/tennisData.xml");
+
+            }
+
+            return true;
+
+        });
+
+        myTree.loadXML("data/treeStruct.xml");
+
+    });
+
+</script>
+
+
+</body>
+</html>
