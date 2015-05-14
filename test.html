@@ -33,53 +33,59 @@
         myTree.setImagePath("codebase/imgs/");
         myTree.attachEvent("onSelect", function(id){
             if(id=="football") {
-                var footballGrid = myLayout.cells("b").attachGrid();
-                footballGrid.setImagePath("codebase/imgs/");
-                footballGrid.setIconsPath("icons/");
-                footballGrid.setHeader("&nbsp;,Name,Rating,Modified");
-                footballGrid.setColTypes("img,ro,ro,ro");
-                footballGrid.setInitWidths("70,250,100,*,0");
-                footballGrid.setColAlign("center,left,left,left");
-                footballGrid.init();
-                footballGrid.load("data/footballData.xml");
-
+                createFootballGrid();
             }
             else if(id=="tennis"){
-                var tennisGrid = myLayout.cells("b").attachGrid();
-                tennisGrid.setImagePath("codebase/imgs/");
-                tennisGrid.setIconsPath("icons/");
-                tennisGrid.setHeader("&nbsp;,Name,Rating,Modified");
-                tennisGrid.setColTypes("img,ro,ro,ro");
-                tennisGrid.setInitWidths("70,250,100,*,0");
-                tennisGrid.setColAlign("center,left,left,left");
-                tennisGrid.init();
-                tennisGrid.load("data/tennisData.xml");
-
+                CreateTennisGrid();
             }
-
             else if(id=="formula"){
-                var formulaGrid = myLayout.cells("b").attachGrid();
-                formulaGrid.setImagePath("codebase/imgs/");
-                formulaGrid.setIconsPath("icons/");
-                formulaGrid.setHeader("&nbsp;,Name,Rating,Modified");
-                formulaGrid.setColTypes("img,ro,ro,ro");
-                formulaGrid.setInitWidths("70,250,100,*,0");
-                formulaGrid.setColAlign("center,left,left,left");
-                formulaGrid.init();
-                formulaGrid.load("data/tennisData.xml");
-
+                CreateFormulaGrid();
             }
-
             return true;
 
         });
+        myTree.loadXML("data/treeStruct.xml", function(){            //callback function
+            myTree.selectItem("football");   //makes 'football' folder selected initially
+        });
 
-        myTree.loadXML("data/treeStruct.xml");
+        function createFootballGrid(){
+            var footballGrid = myLayout.cells("b").attachGrid();
+            footballGrid.setImagePath("codebase/imgs/");
+            footballGrid.setIconsPath("icons/");
+            footballGrid.setHeader("Name, Sickness,Side Effects(Signs),SIde Effects(Symptoms), Dosage");
+            footballGrid.setColTypes("ro,ro,ro,ro,ro");
+            footballGrid.setInitWidths("150,100,*,*,*");
+            footballGrid.setColAlign("left,center,left,left,left");
+            footballGrid.init();
+            footballGrid.loadXML("Php/footballData.php");
+        }
+
+        function CreateTennisGrid(){
+            var tennisGrid = myLayout.cells("b").attachGrid();
+            tennisGrid.setImagePath("codebase/imgs/");
+            tennisGrid.setIconsPath("icons/");
+            tennisGrid.setHeader("&nbsp;,Name,Rating,Modified");
+            tennisGrid.setColTypes("img,ro,ro,ro");
+            tennisGrid.setInitWidths("70,250,100,*,0");
+            tennisGrid.setColAlign("center,left,left,left");
+            tennisGrid.init();
+            tennisGrid.load("data/tennisData.xml");
+        }
+
+        function CreateFormulaGrid(){
+            var formulaGrid = myLayout.cells("b").attachGrid();
+            formulaGrid.setImagePath("codebase/imgs/");
+            formulaGrid.setIconsPath("icons/");
+            formulaGrid.setHeader("&nbsp;,Name,Rating,Modified");
+            formulaGrid.setColTypes("img,ro,ro,ro");
+            formulaGrid.setInitWidths("70,250,100,*,0");
+            formulaGrid.setColAlign("center,left,left,left");
+            formulaGrid.init();
+            formulaGrid.load("data/formulaData.xml");
+        }
 
     });
 
 </script>
-
-
 </body>
 </html>
