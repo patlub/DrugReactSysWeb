@@ -4,6 +4,8 @@ require_once("../dhtmlxConnector_php/codebase/grid_connector.php");
 require_once("config.php");
 
 $grid = new GridConnector($conn, "MySQL");
-$grid->render_table("drugrequests","id","reqSickness,reqSigns,reqSymptoms,sicknessPeriod,status,answer");
+$grid->render_table(
+    "drugrequests","id","reqSickness,reqSigns,reqSymptoms,sicknessPeriod,status,answer"
+);
 
 ?>
