@@ -15,6 +15,7 @@
     </style>
 </head>
 <body>
+<span id="fastclick">
 <script type="text/javascript">
     dhtmlxEvent(window,"load",function(){
         //Layout
@@ -96,11 +97,10 @@
             });
             var dp = new dataProcessor("Php/drugRequestsData.php");
             dp.init(drugRequestsGrid);
-
         }
-
     });
 
 </script>
+</span>
 </body>
 </html>
