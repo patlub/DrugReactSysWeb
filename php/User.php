@@ -7,9 +7,10 @@ class User{
     protected  $_password;
     protected  $_userType;
 
-    function _construct($email, $password){
-        $this->_email = $email;
-        $this->_password = $password;
+    public static function existingUser($email, $password){
+        $instance  = new self();
+        $instance->loadExistingUser($email,$password);
+        return $instance;
     }
     /*
      * Helper method for new user(registering user)
@@ -63,6 +64,10 @@ class User{
         $this->_firstName = $firstName;
         $this->_lastName = $lastName;
         $this->_userType = $userType;
+    }
+    private function loadExistingUser($email,$password){
+        $this->_email = $email;
+        $this->_password = $password;
     }
     /*
      * Logs in the user with right credentials
