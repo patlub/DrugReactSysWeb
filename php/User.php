@@ -51,6 +51,22 @@ class User{
     public function getUser(){
         return $this->_user;
     }
+    /* Sets the First name*/
+    public function setFirstName($firstName){
+        $this->_firstName = $firstName;
+    }
+    /*Sets the Last name*/
+    public function setLastName($lastName){
+        $this->_lastName = $lastName;
+    }
+    /*Sets the Email*/
+    public function setEmail($email){
+        $this->_email = $email;
+    }
+    /*Sets the Password*/
+    public function setPassword($password){
+        $this->_password = $password;
+    }
     /*
      * Sets the fields for a new user who may be registering
      * @param $firstName is new user's first name

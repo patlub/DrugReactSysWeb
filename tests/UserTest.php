@@ -23,7 +23,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
 //    public function testExistingUserCreation(){
 //        $user = $this->existingUser;
-//        $this->assertInstanceOf($user,$this->user);
+//        $this->assertInstanceOf(User,$this->user);
 //    }
     public function testExistingUserEmail()
     {
