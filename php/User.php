@@ -67,6 +67,9 @@ class User{
     public function setPassword($password){
         $this->_password = $password;
     }
+    public function setUserType($userType){
+        $this->_userType = $userType;
+    }
     /*
      * Sets the fields for a new user who may be registering
      * @param $firstName is new user's first name
@@ -119,10 +122,15 @@ class User{
      * */
     public function register(){
         $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('INSERT INTO users VALUES firstName=?,lastName=?, email=?,password=?,accountType=?');
-        $result = $statementHandler->execute(array($this->_firstName, $this->_lastName, $this->_email, $this->_password, $this->_userType));
+        $statementHandler = $dbh->prepare('INSERT INTO users VALUES firstName=:firstname,lastName=:lastname,email=:email,password=:password,accountType=:accounttype');
+        $statementHandler->bindParam(':firstname',$this->_firstName,PDO::PARAM_STR);
+        $statementHandler->bindParam(':lastname',$this->_lastName,PDO::PARAM_STR);
+        $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
+        $statementHandler->bindParam(':password',$this->_password,PDO::PARAM_STR);
+        $statementHandler->bindParam(':accounttype',$this->_userType,PDO::PARAM_STR);
+        $result = $statementHandler->execute();
         if($result)
-            return true;
+            return $result;
         return false;
     }
     /*
@@ -132,8 +140,9 @@ class User{
      */
     protected function checkCredentials(){
         $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('SELECT * FROM users WHERE email=?');
-        $statementHandler->execute(array($this->_email));
+        $statementHandler = $dbh->prepare('SELECT * FROM users WHERE email = :email');
+        $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
+        $statementHandler->execute();
         if($statementHandler->rowCount > 0){
             $user = $statementHandler->fetch(PDO::FETCH_ASSOC);
             if($this->_password == $user['password']){
@@ -147,7 +156,7 @@ class User{
      * @return Returns a database handler to a new PDO object
      *
      */
-    protected  function connectDB(){
+    public  function connectDB(){
         try{
             return new PDO("mysql:host=localhost;dbname=drugreaction","root","");
         }catch (PDOException $e){
