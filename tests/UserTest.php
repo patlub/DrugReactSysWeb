@@ -50,5 +50,12 @@ class UserTest extends PHPUnit_Framework_TestCase{
         $result = $user->register();
         $this->assertTrue($result);
     }
+    public function testUserLogin(){
+        $user = $this->existingUser;
+        $user->setEmail("patricklu2010");
+        $user->setPassword("luboobi");
+        $result = $user->login();
+        $this->assertEquals("1",$result);
+    }
 }
 ?>

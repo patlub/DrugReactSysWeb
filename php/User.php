@@ -7,6 +7,11 @@ class User{
     protected  $_password;
     protected  $_userType;
 
+    /*
+     * Helper method for existing user(registering user)
+     * @return Returns the existing user object
+     *
+     * */
     public static function existingUser($email, $password){
         $instance  = new self();
         $instance->loadExistingUser($email,$password);
@@ -84,15 +89,18 @@ class User{
         $this->_lastName = $lastName;
         $this->_userType = $userType;
     }
+    /*
+     * Sets the fields of an existing user who may be logging in
+     * @param $email, Existing User's email
+     * @param $password, Existing User's password
+     *
+     * */
     private function loadExistingUser($email,$password){
         $this->_email = $email;
         $this->_password = $password;
     }
     /*
      * Logs in the user with right credentials
-     *
-     * @param $email is User's Email
-     * @param $password is User's password
      *
      * @return boolean true for success and boolean false for failure
      *
@@ -122,15 +130,19 @@ class User{
      * */
     public function register(){
         $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('INSERT INTO users VALUES firstName=:firstname,lastName=:lastname,email=:email,password=:password,accountType=:accounttype');
-        $statementHandler->bindParam(':firstname',$this->_firstName,PDO::PARAM_STR);
-        $statementHandler->bindParam(':lastname',$this->_lastName,PDO::PARAM_STR);
-        $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
-        $statementHandler->bindParam(':password',$this->_password,PDO::PARAM_STR);
-        $statementHandler->bindParam(':accounttype',$this->_userType,PDO::PARAM_STR);
+        $statementHandler = $dbh->prepare('INSERT INTO users (id,firstName,lastName,email,password,accountType)VALUES
+                                                              (:id, :firstname, :lastname, :email, :password, :accounttype)');
+        $id = '';
+        $statementHandler->bindParam(':id',$id);
+        $statementHandler->bindParam(':firstname',$this->_firstName);
+        $statementHandler->bindParam(':lastname',$this->_lastName);
+        $statementHandler->bindParam(':email',$this->_email);
+        $statementHandler->bindParam(':password',$this->_password);
+        $statementHandler->bindParam(':accounttype',$this->_userType);
         $result = $statementHandler->execute();
-        if($result)
+        if($result) {
             return $result;
+        }
         return false;
     }
     /*
@@ -143,7 +155,7 @@ class User{
         $statementHandler = $dbh->prepare('SELECT * FROM users WHERE email = :email');
         $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
         $statementHandler->execute();
-        if($statementHandler->rowCount > 0){
+        if($statementHandler->rowCount() > 0){
             $user = $statementHandler->fetch(PDO::FETCH_ASSOC);
             if($this->_password == $user['password']){
                 return $user;

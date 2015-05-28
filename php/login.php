@@ -1,6 +1,10 @@
 <?php
+require_once("User.php");
 
 $loginEmail = $_POST['loginEmail'];
-echo "$loginEmail";
-exit();
+$password = $_POST['password'];
+
+$user = User::existingUser($loginEmail,$password);
+$result = $user->login();
+echo $result;
 ?>
