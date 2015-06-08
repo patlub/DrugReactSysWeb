@@ -10,6 +10,56 @@ class Drug {
     private $_userId;
     private $_sicknessPeriod;
 
+    public function getDrugName(){
+        return $this->_drugName;
+    }
+    public function setDrugName($drugName){
+        $this->_drugName = $drugName;
+    }
+    public function getSickness(){
+        return $this->_sickness;
+    }
+    public function setSickness($sickness){
+        $this->_sickness = $sickness;
+    }
+    public function getDosage(){
+        return $this->_dosage;
+    }
+    public function setDosage($dosage){
+        $this->_dosage = $dosage;
+    }
+    public function getMedPeriod(){
+        return $this->_medPeriod;
+    }
+    public function setMedPeriod($medPeriod){
+        $this->_medPeriod = $medPeriod;
+    }
+    public function getSigns(){
+        return $this->_signs;
+    }
+    public function setSigns($signs){
+        $this->_signs = $signs;
+    }
+    public function getSymptoms(){
+        return $this->_symptoms;
+    }
+    public function setSymptoms($symptoms){
+        $this->_symptoms = $symptoms;
+    }
+    public function getUserId(){
+        return $this->_userId;
+    }
+    public function setUserId($userId){
+        $this->_userId = $userId;
+    }
+    public function getSicknessPeriod(){
+        return $this->_sicknessPeriod;
+
+    }
+    public function setSicknessPeriod($sicknessPeriod){
+        $this->_sicknessPeriod = $sicknessPeriod;
+
+    }
     public static function drugReport($drugName, $sickness, $dosage, $medPeriod, $Signs, $Symptoms, $userId){
         $instance  = new self();
         $instance->loadDrugReport($drugName, $sickness, $dosage, $medPeriod, $Signs, $Symptoms, $userId);
