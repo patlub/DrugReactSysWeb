@@ -7,14 +7,14 @@ class UserTest extends PHPUnit_Framework_TestCase{
     private $newUser;
     private $email = "patricklu2010@gmail.com";
     private $password = "qwerty";
-    private $firstname = "Patrick";
-    private $lastname = "Luboobi";
+    private $firstName = "Patrick";
+    private $lastName = "Luboobi";
     private $userType = "normal";
 
 
     public function setUp(){
         $this->existingUser = User::existingUser($this->email, $this->password);
-        $this->newUser = User::newUser($this->firstname,$this->lastname,$this->email,$this->password,$this->userType);
+        $this->newUser = User::newUser($this->firstName,$this->lastName,$this->email,$this->password,$this->userType);
     }
     public function testExistingUserEmail()
     {
@@ -23,8 +23,8 @@ class UserTest extends PHPUnit_Framework_TestCase{
     }
     public function testNewUserFields(){
         $user = $this->newUser;
-        $this->assertEquals($this->firstname, $user->getFirstName());
-        $this->assertEquals($this->lastname, $user->getLastName());
+        $this->assertEquals($this->firstName, $user->getFirstName());
+        $this->assertEquals($this->lastName, $user->getLastName());
         $this->assertEquals($this->email, $user->getEmail());
         $this->assertEquals($this->userType, $user->getUserType());
     }
