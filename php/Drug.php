@@ -92,14 +92,54 @@ class Drug {
         $this->_sicknessPeriod = $sicknessPeriod;
         $this->_userId = $userId;
     }
-
-
-    public function requestDrug(){
-
+    public function reportDrug(){
+        $dbh = $this->connectDB();
+        $statementHandler = $dbh->prepare('INSERT INTO drugreports VALUES (:id, :drugName, :sickness, :dosage, :signs,
+                                                                          :symptoms, :medPeriod, :userId, :date, :status, :answer)');
+        $id = '';
+        $date = date('Y-m-d');
+        $status = 'pending';
+        $answer = '';
+        $statementHandler->bindParam(':id', $id);
+        $statementHandler->bindParam(':drugName', $this->_drugName);
+        $statementHandler->bindParam(':sickness', $this->_sickness);
+        $statementHandler->bindParam(':dosage', $this->_dosage);
+        $statementHandler->bindParam(':signs', $this->_signs);
+        $statementHandler->bindParam(':symptoms', $this->_symptoms);
+        $statementHandler->bindParam(':medPeriod', $this->_medPeriod);
+        $statementHandler->bindParam(':userId', $this->_userId);
+        $statementHandler->bindParam(':date', $date);
+        $statementHandler->bindParam(':status', $status);
+        $statementHandler->bindParam(':answer', $answer);
+        $result = $statementHandler->execute();
+        if($result){
+            return $result;
+        }
+        return false;
     }
 
-    public function reportDrug(){
-
+    public function requestDrug(){
+        $dbh = $this->connectDB();
+        $statementHandler = $dbh->prepare('INSERT INTO drugrequests VALUES (:id, :sickness, :signs, :symptoms,
+                                                            :sicknessPeriod, :date, :userId, :status, :answer)');
+        $id = '';
+        $date = date('Y-m-d');
+        $status = 'pending';
+        $answer = '';
+        $statementHandler->bindParam(':id', $id);
+        $statementHandler->bindParam(':sickness', $this->_sickness);
+        $statementHandler->bindParam(':signs', $this->_signs);
+        $statementHandler->bindParam(':symptoms', $this->_symptoms);
+        $statementHandler->bindParam(':sicknessPeriod', $this->_sicknessPeriod);
+        $statementHandler->bindParam(':date', $date);
+        $statementHandler->bindParam(':userId', $this->_userId);
+        $statementHandler->bindParam(':status', $status);
+        $statementHandler->bindParam(':answer', $answer);
+        $result = $statementHandler->execute();
+        if($result){
+            return $result;
+        }
+        return false;
     }
 
     public  function connectDB()

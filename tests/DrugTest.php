@@ -50,4 +50,19 @@ class DrugTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($this->sicknessPeriod, $newDrugRequest->getSicknessPeriod());
         $this->assertEquals($this->userId, $newDrugRequest->getUserId());
     }
+    public function testDBConnection(){
+        $newDrugReport = $this->newDrugReport;
+        $DBHandler = $newDrugReport->connectDB();
+        $this->assertInstanceOf('PDO', $DBHandler);
+    }
+    public function testReportDrugMethod(){
+        $newDrugReport = $this->newDrugReport;
+        $result = $newDrugReport->reportDrug();
+        $this->assertTrue($result);
+    }
+    public function testRequestDrugMethod(){
+        $newDrugRequest = $this->newDrugRequest;
+        $result = $newDrugRequest->requestDrug();
+        $this->assertTrue($result);
+    }
 }
