@@ -10,6 +10,8 @@ class Drug {
     private $_userId;
     private $_sicknessPeriod;
 
+    /*
+     * setters and getters */
     public function getDrugName(){
         return $this->_drugName;
     }
@@ -60,6 +62,11 @@ class Drug {
         $this->_sicknessPeriod = $sicknessPeriod;
 
     }
+    /*
+     * Helper function for new drug report
+     * @return instance of new drug report object
+     *
+     * */
     public static function drugReport($drugName, $sickness, $dosage, $medPeriod, $Signs, $Symptoms, $userId){
         $instance  = new self();
         $instance->loadDrugReport($drugName, $sickness, $dosage, $medPeriod, $Signs, $Symptoms, $userId);
@@ -67,7 +74,7 @@ class Drug {
     }
     /*
      * Helper method for new user(registering user)
-     * @return Returns the new user object
+     * @return Returns the new drug request object
      * */
     public static function drugRequest($sickness, $signs, $symptoms, $sicknessPeriod, $userId){
         $instance  = new self();
@@ -75,6 +82,9 @@ class Drug {
         return $instance;
     }
 
+    /*
+     * Sets the fields for the new drug report
+     * */
     public function loadDrugReport($drugName, $sickness, $dosage, $medPeriod, $signs, $symptoms, $userId){
         $this->_drugName = $drugName;
         $this->_sickness = $sickness;
@@ -84,7 +94,9 @@ class Drug {
         $this->_symptoms = $symptoms;
         $this->_userId = $userId;
     }
-
+    /*
+     * Sets the fields for the new drug request
+     * */
     public function loadDrugRequest($sickness, $signs, $symptoms, $sicknessPeriod, $userId){
         $this->_sickness = $sickness;
         $this->_signs = $signs;
@@ -92,6 +104,10 @@ class Drug {
         $this->_sicknessPeriod = $sicknessPeriod;
         $this->_userId = $userId;
     }
+    /*
+     * Stores the new drug report object to the database
+     * @return boolean true on success else failure
+     * */
     public function reportDrug(){
         $dbh = $this->connectDB();
         $statementHandler = $dbh->prepare('INSERT INTO drugreports VALUES (:id, :drugName, :sickness, :dosage, :signs,
@@ -117,7 +133,10 @@ class Drug {
         }
         return false;
     }
-
+    /*
+     * Stores the new drug request to the database
+     * @return boolean true on success else failure
+     * */
     public function requestDrug(){
         $dbh = $this->connectDB();
         $statementHandler = $dbh->prepare('INSERT INTO drugrequests VALUES (:id, :sickness, :signs, :symptoms,
@@ -141,7 +160,7 @@ class Drug {
         }
         return false;
     }
-
+    /*PDO database connection*/
     public  function connectDB()
     {
         try {
