@@ -49,6 +49,7 @@ class UserTest extends PHPUnit_Framework_TestCase{
         $user = $this->newUser;
         $result = $user->register();
         $this->assertTrue($result);
+        $this->assertTrue(isset($_SESSION['user_id']));
     }
     public function testUserLogin(){
         $user = $this->existingUser;
@@ -56,6 +57,7 @@ class UserTest extends PHPUnit_Framework_TestCase{
         $user->setPassword("qwerty");
         $result = $user->login();
         $this->assertEquals("1",$result);
+        $this->assertTrue(isset($_SESSION['user_id']));
     }
 }
 ?>

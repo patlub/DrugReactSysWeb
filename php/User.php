@@ -130,7 +130,7 @@ class User{
      * */
     public function register(){
         $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('INSERT INTO users (id,firstName,lastName,email,password,accountType)VALUES
+        $statementHandler = $dbh->prepare('INSERT INTO users (id,firstName,lastName,email,password,accountType) VALUES
                                                               (:id, :firstname, :lastname, :email, :password, :accounttype)');
         $id = '';
         $statementHandler->bindParam(':id',$id);
@@ -141,6 +141,11 @@ class User{
         $statementHandler->bindParam(':accounttype',$this->_userType);
         $result = $statementHandler->execute();
         if($result) {
+            $statementHandler = $dbh->prepare('SELECT LAST_INSERT_ID()');
+            $statementHandler->execute();
+            $LastRow = $statementHandler->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['user_id'] = $LastRow['LAST_INSERT_ID()'];
+
             return $result;
         }
         return false;
