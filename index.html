@@ -27,6 +27,14 @@
         //Toolbar
         var myToolbar = myLayout.attachToolbar();
         myToolbar.setIconsPath("icons/");
+        myToolbar.attachEvent("onClick", function(id){
+            if(id=="addDrug") {
+                addDrug();
+            }
+            else if(id=="addUser") {
+                addUser();
+            }
+        });
         myToolbar.loadStruct("data/toolbarStruct.xml");
 
         //tree
@@ -37,16 +45,19 @@
                 createDrugGrid();
             }
             else if(id=="drugReports"){
-                CreateDrugReportsGrid();
+                createDrugReportsGrid();
             }
             else if(id=="drugRequests"){
-                CreateDrugRequestsGrid();
+                createDrugRequestsGrid();
+            }
+            else if(id=="Users"){
+                createUserGrid();
             }
             return true;
 
         });
         myTree.loadXML("data/treeStruct.xml", function(){            //callback function
-            myTree.selectItem("drug");   //makes 'football' folder selected initially
+            myTree.selectItem("drug");   //makes 'drug' folder selected initially
         });
 
         function createDrugGrid(){
@@ -64,7 +75,7 @@
             dp.init(drugGrid);
         }
 
-        function CreateDrugReportsGrid(){
+        function createDrugReportsGrid(){
             var drugReportsGrid = myLayout.cells("b").attachGrid();
             drugReportsGrid.setImagePath("codebase/imgs/");
             drugReportsGrid.setIconsPath("icons/");
@@ -82,7 +93,7 @@
             dp.init(drugReportsGrid);
         }
 
-        function CreateDrugRequestsGrid(){
+        function createDrugRequestsGrid(){
             var drugRequestsGrid = myLayout.cells("b").attachGrid();
             drugRequestsGrid.setImagePath("codebase/imgs/");
             drugRequestsGrid.setIconsPath("icons/");
@@ -98,8 +109,35 @@
             var dp = new dataProcessor("Php/drugRequestsData.php");
             dp.init(drugRequestsGrid);
         }
-    });
 
+        function createUserGrid(){
+            var userGrid = myLayout.cells("b").attachGrid();
+            userGrid.setImagePath("codebase/imgs/");
+            userGrid.setIconsPath("icons/");
+            userGrid.setHeader("First name, Last name, Email");
+            userGrid.setColTypes("ro,ro,ro");
+            userGrid.setInitWidths("*,*,*");
+            userGrid.setColAlign("left,left,left");
+            userGrid.init();
+            userGrid.load("Php/userData.php");
+            var dp = new dataProcessor("Php/userData.php");
+            dp.init(userGrid);
+        }
+
+        function addDrug(){
+            var addDrugForm = myLayout.cells("b").attachForm();
+            addDrugForm.loadStruct("data/addDrugForm.xml");
+
+            var dp = new dataProcessor("Php/drugData.php");
+            dp.init(addDrugForm);
+
+            addDrugForm.attachEvent("onButtonClick", function(buttonId){
+                if(buttonId == "submitDrug") {
+                    addDrugForm.save();
+                }
+            });
+        }
+    });
 </script>
 </span>
 </body>

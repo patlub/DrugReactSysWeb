@@ -11,9 +11,9 @@ $confirm = $_POST['confirm'];
 $user = User::newUser($firstname,$lastname,$email,$password,"normal");
 $result = $user->register();
 if($result) {
-    echo $_SESSION['user_email'];
+    echo true;
 }else {
-    echo 'Error';
+    echo false;
 }
-//echo "$result";
+
 ?>

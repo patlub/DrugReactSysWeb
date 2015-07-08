@@ -8,8 +8,8 @@ $password = $_POST['password'];
 $user = User::existingUser($loginEmail,$password);
 $result = $user->login();
  if($result){
-     echo $_SESSION['user_email'];
+     echo true;
 }else {
-     echo 'Error';
+     echo false;
  }
 ?>
