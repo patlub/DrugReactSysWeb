@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<items>
+    <item type="settings"  inputWidth="220"  position="label-left"
+          labelWidth="150"/>
+    <item type="label"      label="Add User"/>
+    <item type="input"      label="First Name"           name="firstName"   offsetLeft="15"/>
+    <item type="input"      label="Last Name"            name="lastName"    offsetLeft="15"/>
+    <item type="input"      label="Email"                name="email"       offsetLeft="15"/>
+    <item type="password"   label="Password"             name="password"    offsetLeft="15"/>
+    <item type="password"   label="Re-type Password"     name="confirm"     offsetLeft="15"/>
+    <item type="button"     value="Submit"               name="submitUser"  offsetTop="15"   offsetLeft="230" />
+</items>

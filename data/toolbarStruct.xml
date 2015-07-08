@@ -6,6 +6,6 @@
     <item id="home"       type="button" img="home.png"/>
     <item id="addDrug"    type="button" img="add.png"    text="Add Drug"/>
     <item id="addUser"    type="button" img="add.png"    text="Add User"/>
-    <item id="edit"       type="button" img="edit.png"   text="Edit"/>
+    <item id="editUser"   type="button" img="edit.png"   text="Edit User"/>
     <item id="delete"     type="button" img="delete.png" text="Delete"/>
 </toolbar>

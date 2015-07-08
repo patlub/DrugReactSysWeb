@@ -50,7 +50,7 @@
             else if(id=="drugRequests"){
                 createDrugRequestsGrid();
             }
-            else if(id=="Users"){
+            else if(id=="users"){
                 createUserGrid();
             }
             return true;
@@ -134,6 +134,20 @@
             addDrugForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitDrug") {
                     addDrugForm.save();
+                }
+            });
+        }
+
+        function addUser(){
+            var addUserForm = myLayout.cells("b").attachForm();
+            addUserForm.loadStruct("data/addUserForm.xml");
+
+            var dp = new dataProcessor("Php/UserData.php");
+            dp.init(addUserForm);
+
+            addUserForm.attachEvent("onButtonClick", function(buttonId){
+                if(buttonId == "submitUser") {
+                    addUserForm.save();
                 }
             });
         }
