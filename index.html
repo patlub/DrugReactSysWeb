@@ -68,6 +68,8 @@
             drugGrid.setColTypes("ed,ed,ed,ed,ed");
             drugGrid.setInitWidths("150,100,*,*,*");
             drugGrid.setColAlign("left,left,left,left,left");
+            drugGrid.enableMultiline(true);
+            drugGrid.enableDragAndDrop(true);
             drugGrid.init();
             drugGrid.loadXML("Php/drugData.php");
 
@@ -83,6 +85,8 @@
             drugReportsGrid.setColTypes("ro,ro,ro,ro,ro,ro,coro,txt");
             drugReportsGrid.setInitWidths("*,*,*,*,*,*,*,200");
             drugReportsGrid.setColAlign("left,left,left,left,left,left,left,left");
+            drugReportsGrid.enableMultiline(true);
+            drugReportsGrid.enableDragAndDrop(true);
             drugReportsGrid.init();
             drugReportsGrid.load("Php/drugReportsData.php",function(){
                 drugReportsGrid.setRowHidden(drugReportsGrid.getRowId(0),true);
@@ -101,6 +105,8 @@
             drugRequestsGrid.setColTypes("ro,ro,ro,ro,coro,txt");
             drugRequestsGrid.setInitWidths("*,*,*,82,80,300");
             drugRequestsGrid.setColAlign("left,left,left,left");
+            drugRequestsGrid.enableMultiline(true);
+            drugRequestsGrid.enableDragAndDrop(true);
             drugRequestsGrid.init();
             drugRequestsGrid.load("Php/drugRequestsData.php", function(){
                 drugRequestsGrid.setRowHidden(drugRequestsGrid.getRowId(0),true);
@@ -118,6 +124,8 @@
             userGrid.setColTypes("ro,ro,ro");
             userGrid.setInitWidths("*,*,*");
             userGrid.setColAlign("left,left,left");
+            userGrid.enableMultiline(true);
+            userGrid.enableDragAndDrop(true);
             userGrid.init();
             userGrid.load("Php/userData.php");
             var dp = new dataProcessor("Php/userData.php");
@@ -130,6 +138,7 @@
 
             var dp = new dataProcessor("Php/drugData.php");
             dp.init(addDrugForm);
+            myTree.selectItem("Drugs");
 
             addDrugForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitDrug") {
@@ -144,6 +153,7 @@
 
             var dp = new dataProcessor("Php/UserData.php");
             dp.init(addUserForm);
+            myTree.selectItem("user");
 
             addUserForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitUser") {

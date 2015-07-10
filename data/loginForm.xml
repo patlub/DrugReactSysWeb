@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<items>
+    <item type="settings"  inputWidth="220"  position="label-left"
+          labelWidth="150"/>
+    <item type="label"      label="Login"/>
+    <item type="input"      label="Username"     name="userName"    offsetLeft="15"     class="dhxlist_txt_textarea"/>
+    <item type="password"   label="Password"     name="userpass"    offsetLeft="15" offsetTop="25"/>
+    <item type="button"     value="Sign in"       name="signIn"      offsetTop="15"   offsetLeft="230" />
+</items>
