@@ -1,10 +1,10 @@
 <tree id="0">
 <item id="Drugs" text="Drug Info" open="1">
-    <item id="drug" text="Drugs" open="1" im0="folderClosed.gif"></item>
-    <item id="drugReports" text="Drug Reports" open="1" im0="folderClosed.gif"></item>
-    <item id="drugRequests" text="Drug Requests" im0="folderClosed.gif"></item>
+    <item id="drug" text="Drugs" open="1" img="grid_file1"></item>
+    <item id="drugReports" text="Drug Reports" open="1" img="grid_file1"></item>
+    <item id="drugRequests" text="Drug Requests" img="grid_file1"></item>
 </item>
 <item id="user" text="User's Info" open="1">
-    <item id="users" text="Users" im0="folderClosed.gif"></item>
+    <item id="users" text="Users" img="grid_file1"></item>
 </item>
 </tree>
