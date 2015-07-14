@@ -34,6 +34,12 @@
             else if(id=="addUser") {
                 addUser();
             }
+            else if(id=="signOut"){
+//                signOut();
+            }
+            else if(id=="changePassword"){
+                changePassword();
+            }
         });
         myToolbar.loadStruct("data/toolbarStruct.xml");
 
@@ -120,10 +126,10 @@
             var userGrid = myLayout.cells("b").attachGrid();
             userGrid.setImagePath("codebase/imgs/");
             userGrid.setIconsPath("icons/");
-            userGrid.setHeader("First name, Last name, Email");
-            userGrid.setColTypes("ro,ro,ro");
-            userGrid.setInitWidths("*,*,*");
-            userGrid.setColAlign("left,left,left");
+            userGrid.setHeader("First name, Last name, Email, Password, Account Type");
+            userGrid.setColTypes("ro,ro,ro,ro,ro");
+            userGrid.setInitWidths("*,*,*,*");
+            userGrid.setColAlign("left,left,left,left,left");
             userGrid.enableMultiline(true);
             userGrid.enableDragAndDrop(true);
             userGrid.init();
@@ -161,6 +167,31 @@
                 }
             });
         }
+
+        function changePassword(){
+            var changePasswordForm = myLayout.cells("b").attachForm();
+            changePasswordForm.loadStruct("data/changePasswordForm.xml");
+
+            myTree.selectItem("user");
+            var msg;
+            changePasswordForm.attachEvent("onButtonClick", function(buttonId){
+                if(buttonId == "updatePassword") {
+                    changePasswordForm.send("Php/changePassword.php", "post", function(response){
+                        if(msg=response.xmlDoc.responseText){
+                            alert(msg);
+                        }
+                    });
+                }
+            });
+
+        }
+//        function signOut(){
+//            send("logout.php", "post", function(response){
+//                if (response.xmlDoc.responseText) {
+//                    location.href = "Php/web_signIn.php";
+//                }
+//            });
+//        }
     });
 </script>
 </span>

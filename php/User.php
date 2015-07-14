@@ -110,6 +110,7 @@ class User{
         if($user) {
             $this->_user = $user;
             $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_email'] = $this->_email;
             return $user['id'];
         }
         return false;
@@ -145,6 +146,7 @@ class User{
             $statementHandler->execute();
             $LastRow = $statementHandler->fetch(PDO::FETCH_ASSOC);
             $_SESSION['user_id'] = $LastRow['LAST_INSERT_ID()'];
+            $_SESSION['user_email'] = $this->_email;
 
             return $result;
         }
@@ -165,6 +167,17 @@ class User{
             if($this->_password == $user['password']){
                 return $user;
             }
+        }
+        return false;
+    }
+    public function changePassword(){
+        $dbh = $this->connectDB();
+        $statementHandler = $dbh->prepare('UPDATE users SET password = :password WHERE id = :id');
+        $statementHandler->bindParam(':id',$_SESSION['user_id'],PDO::PARAM_INT);
+        $statementHandler->bindParam(':password',$this->_password,PDO::PARAM_STR);
+        $result = $statementHandler->execute();
+        if($result){
+            return $result;
         }
         return false;
     }

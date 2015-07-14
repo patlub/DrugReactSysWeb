@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbar>
-    <item id="back"       type="button" img="left_arrow.png"/>
-    <item id="fwd"        type="button" img="right_arrow.png"/>
-    <item id="reload"     type="button" img="reload.png"/>
-    <item id="home"       type="button" img="home.png"/>
-    <item id="addDrug"    type="button" img="add.png"    text="Add Drug"/>
-    <item id="addUser"    type="button" img="add.png"    text="Add User"/>
-    <item id="editProfile"   type="button" img="edit.png"   text="Edit Profile"/>
+    <item id="back"             type="button" img="left_arrow.png"/>
+    <item id="fwd"              type="button" img="right_arrow.png"/>
+    <item id="reload"           type="button" img="reload.png"/>
+    <item id="home"             type="button" img="home.png"/>
+    <item id="addDrug"          type="button" img="add.png"    text="Add Drug"/>
+    <item id="addUser"          type="button" img="add.png"    text="Add User"/>
+    <item id="editProfile"      type="button" img="edit.png"   text="Edit Profile"/>
     <item id="changePassword"   type="button" img="edit.png"   text="Change Password"/>
-    <item id="delete"     type="button" img="delete.png" text="Delete"/>
+    <item id="delete"           type="button" img="delete.png" text="Delete"/>
+    <item id="signOut"          type="button" text="Sign out"/>
 </toolbar>

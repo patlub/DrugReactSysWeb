@@ -4,6 +4,7 @@
     <title>Login</title>
     <script src="../codebase/dhtmlx.js"></script>
     <link href="../codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
+    <link href="../codebase/skins/terrace/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
     <style>
 html, body{
     width: 100%;
@@ -24,19 +25,20 @@ html, body{
         var layout = new dhtmlXLayoutObject({
             parent:  document.body,
             pattern: "1C",
+            skin:    "dhx_terrace",
 
             offsets:{
                 top:     100,
                 right:   500,
-                bottom:  100,
+                bottom:  270,
                 left:    500
             },
             cells: [
                 {
                     id:             "a",        // id of the cell you want to configure
-                    text:           "Drug Reaction Login",     // header text
+                    text:           "Drug Reaction Login",
                     collapsed_text: "Text 2",   // header text for a collapsed cell
-                    header:         true,      // hide header on init
+                    header:         true,      // show header on init
                     width:          100,        // cell init width
                     height:         100,        // cell init height
                     fix_size:       [true,null] // fix cell's size, [width,height]
@@ -55,10 +57,11 @@ html, body{
 
         function login(){
             loginForm.send("login.php", "post", function(response){
-                if (response.xmlDoc.responseText) {
-                    resObj.innerHTML = "Login successful";
-                    resObj.style.color = "green";
+                var msg;
+                if (msg=response.xmlDoc.responseText) {
+                    location.href = "../index.html";
                 } else {
+                    alert(msg);
                     resObj.innerHTML = "Login failed";
                     resObj.style.color = "red";
                 }
@@ -66,5 +69,6 @@ html, body{
         }
     });
 </script>
+<span id="res"></span>
 </body>
 </html>
