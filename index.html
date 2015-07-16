@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Manager</title>
+    <title>Drug Reaction</title>
     <script src="codebase/dhtmlx.js"></script>
     <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
     <style>
@@ -19,8 +19,10 @@
 <script type="text/javascript">
     dhtmlxEvent(window,"load",function(){
         //Layout
-        var myLayout = new dhtmlXLayoutObject(document.body, "2U");
+        var myLayout = new dhtmlXLayoutObject(document.body, "3W");
         myLayout.cells("a").setWidth(250);
+        myLayout.cells("b").setWidth(750);
+        myLayout.cells("c").setWidth(0);
         myLayout.cells("a").setText("Files");
         myLayout.cells("b").hideHeader();
 
@@ -39,6 +41,9 @@
             }
             else if(id=="changePassword"){
                 changePassword();
+            }
+            else if(id=="editProfile"){
+                editProfile();
             }
         });
         myToolbar.loadStruct("data/toolbarStruct.xml");
@@ -68,6 +73,8 @@
 
         function createDrugGrid(){
             var drugGrid = myLayout.cells("b").attachGrid();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Drugs");
             drugGrid.setImagePath("codebase/imgs/");
             drugGrid.setIconsPath("icons/");
             drugGrid.setHeader("Name, Sickness,Side Effects(Signs),SIde Effects(Symptoms), Dosage");
@@ -85,6 +92,8 @@
 
         function createDrugReportsGrid(){
             var drugReportsGrid = myLayout.cells("b").attachGrid();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Drug Reports");
             drugReportsGrid.setImagePath("codebase/imgs/");
             drugReportsGrid.setIconsPath("icons/");
             drugReportsGrid.setHeader("Drug,Sickness,Dosage,Signs,Symptoms,Period,Status,Answer");
@@ -105,6 +114,8 @@
 
         function createDrugRequestsGrid(){
             var drugRequestsGrid = myLayout.cells("b").attachGrid();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Drug Requests");
             drugRequestsGrid.setImagePath("codebase/imgs/");
             drugRequestsGrid.setIconsPath("icons/");
             drugRequestsGrid.setHeader("Sickness,Signs,Symptoms,Duration,status,answer");
@@ -124,11 +135,13 @@
 
         function createUserGrid(){
             var userGrid = myLayout.cells("b").attachGrid();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Users");
             userGrid.setImagePath("codebase/imgs/");
             userGrid.setIconsPath("icons/");
             userGrid.setHeader("First name, Last name, Email, Password, Account Type");
             userGrid.setColTypes("ro,ro,ro,ro,ro");
-            userGrid.setInitWidths("*,*,*,*");
+            userGrid.setInitWidths("*,*,*,*,*");
             userGrid.setColAlign("left,left,left,left,left");
             userGrid.enableMultiline(true);
             userGrid.enableDragAndDrop(true);
@@ -140,6 +153,8 @@
 
         function addDrug(){
             var addDrugForm = myLayout.cells("b").attachForm();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Add Drug");
             addDrugForm.loadStruct("data/addDrugForm.xml");
 
             var dp = new dataProcessor("Php/drugData.php");
@@ -149,27 +164,33 @@
             addDrugForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitDrug") {
                     addDrugForm.save();
+                    myTree.selectItem("drug");
                 }
             });
         }
 
         function addUser(){
             var addUserForm = myLayout.cells("b").attachForm();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Add User");
             addUserForm.loadStruct("data/addUserForm.xml");
 
-            var dp = new dataProcessor("Php/UserData.php");
+            var dp = new dataProcessor("Php/userData.php");
             dp.init(addUserForm);
             myTree.selectItem("user");
 
             addUserForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitUser") {
                     addUserForm.save();
+                    myTree.selectItem("users");
                 }
             });
         }
 
         function changePassword(){
             var changePasswordForm = myLayout.cells("b").attachForm();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Change Password");
             changePasswordForm.loadStruct("data/changePasswordForm.xml");
 
             myTree.selectItem("user");
@@ -177,13 +198,48 @@
             changePasswordForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "updatePassword") {
                     changePasswordForm.send("Php/changePassword.php", "post", function(response){
-                        if(msg=response.xmlDoc.responseText){
-                            alert(msg);
+                        if(response.xmlDoc.responseText == true){
+                            myTree.selectItem("users");
+                        }else{
+                            alert("Network Error");
                         }
                     });
                 }
             });
+        }
 
+        function editProfile(){
+            var editProfileGrid = myLayout.cells("b").attachGrid();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Click on User row to edit");
+            editProfileGrid.setImagePath("codebase/imgs/");
+            editProfileGrid.setIconsPath("icons/");
+            editProfileGrid.setHeader("First name, Last name, Email");
+            editProfileGrid.setColumnIds("firstName,lastName,email");
+            editProfileGrid.setColTypes("ro,ro,ro");
+            editProfileGrid.setInitWidths("*,*,*");
+            editProfileGrid.setColAlign("left,left,left");
+            editProfileGrid.init();
+            editProfileGrid.load("Php/editProfileData.php");
+            editProfileGrid.selectRow(0);
+
+//            myLayout.cells("b").setWidth(0);
+
+            var editProfileForm = myLayout.cells("c").attachForm();
+            myLayout.cells("c").setWidth(350);
+            myLayout.cells("c").showHeader();
+            myLayout.cells("c").setText("Edit Profile Form");
+            editProfileForm.loadStruct("data/editProfileForm.xml");
+            editProfileForm.bind(editProfileGrid);
+
+            var dp = new dataProcessor("Php/editProfileData.php");
+            dp.init(editProfileGrid);
+
+            editProfileForm.attachEvent("onButtonClick", function(){
+                    editProfileForm.save();
+            });
+            editProfileGrid.selectRow(0,true);
+//            myTree.selectItem("users");
         }
 //        function signOut(){
 //            send("logout.php", "post", function(response){
