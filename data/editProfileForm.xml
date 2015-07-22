@@ -5,5 +5,5 @@
     <item type="input"      label="First Name"           name="firstName"   offsetLeft="15"/>
     <item type="input"      label="Last Name"            name="lastName"    offsetLeft="15"/>
     <item type="input"      label="Email"                name="email"       offsetLeft="15"/>
-    <item type="button"     value="Edit"                 offsetTop="15"   offsetLeft="230" />
+    <item type="button"     value="Save"                 offsetTop="15"   offsetLeft="230" />
 </items>

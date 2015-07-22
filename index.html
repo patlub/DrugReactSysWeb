@@ -3,6 +3,9 @@
 <head>
     <title>Drug Reaction</title>
     <script src="codebase/dhtmlx.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
     <style>
         html, body{
@@ -18,11 +21,15 @@
 <span id="fastclick">
 <script type="text/javascript">
     dhtmlxEvent(window,"load",function(){
+        //Grid variables
+        var drugGrid;
+        var drugRequestsGrid;
+        var drugReportsGrid;
+        var userGrid;
+
         //Layout
-        var myLayout = new dhtmlXLayoutObject(document.body, "3W");
+        var myLayout = new dhtmlXLayoutObject(document.body, "2U");
         myLayout.cells("a").setWidth(250);
-        myLayout.cells("b").setWidth(750);
-        myLayout.cells("c").setWidth(0);
         myLayout.cells("a").setText("Files");
         myLayout.cells("b").hideHeader();
 
@@ -36,14 +43,17 @@
             else if(id=="addUser") {
                 addUser();
             }
-            else if(id=="signOut"){
-//                signOut();
-            }
             else if(id=="changePassword"){
                 changePassword();
             }
             else if(id=="editProfile"){
                 editProfile();
+            }
+            else if(id=="delete"){
+                deleteItem();
+            }
+            else if(id=="signOut"){
+//                signOut();
             }
         });
         myToolbar.loadStruct("data/toolbarStruct.xml");
@@ -72,7 +82,7 @@
         });
 
         function createDrugGrid(){
-            var drugGrid = myLayout.cells("b").attachGrid();
+            drugGrid = myLayout.cells("b").attachGrid();
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Drugs");
             drugGrid.setImagePath("codebase/imgs/");
@@ -85,13 +95,12 @@
             drugGrid.enableDragAndDrop(true);
             drugGrid.init();
             drugGrid.loadXML("Php/drugData.php");
-
             var dp = new dataProcessor("Php/drugData.php");
             dp.init(drugGrid);
         }
 
         function createDrugReportsGrid(){
-            var drugReportsGrid = myLayout.cells("b").attachGrid();
+            drugReportsGrid = myLayout.cells("b").attachGrid();
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Drug Reports");
             drugReportsGrid.setImagePath("codebase/imgs/");
@@ -113,7 +122,7 @@
         }
 
         function createDrugRequestsGrid(){
-            var drugRequestsGrid = myLayout.cells("b").attachGrid();
+            drugRequestsGrid = myLayout.cells("b").attachGrid();
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Drug Requests");
             drugRequestsGrid.setImagePath("codebase/imgs/");
@@ -134,7 +143,7 @@
         }
 
         function createUserGrid(){
-            var userGrid = myLayout.cells("b").attachGrid();
+            userGrid = myLayout.cells("b").attachGrid();
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Users");
             userGrid.setImagePath("codebase/imgs/");
@@ -209,26 +218,23 @@
         }
 
         function editProfile(){
-            var editProfileGrid = myLayout.cells("b").attachGrid();
-            myLayout.cells("b").showHeader();
-            myLayout.cells("b").setText("Click on User row to edit");
+//            var editProfileGrid = myLayout.cells("c").attachGrid();
+            var editProfileGrid = new dhtmlXGridObject();
             editProfileGrid.setImagePath("codebase/imgs/");
-            editProfileGrid.setIconsPath("icons/");
+            editProfileGrid.setIconPath("icons/");
             editProfileGrid.setHeader("First name, Last name, Email");
             editProfileGrid.setColumnIds("firstName,lastName,email");
             editProfileGrid.setColTypes("ro,ro,ro");
             editProfileGrid.setInitWidths("*,*,*");
             editProfileGrid.setColAlign("left,left,left");
             editProfileGrid.init();
-            editProfileGrid.load("Php/editProfileData.php");
-            editProfileGrid.selectRow(0);
+            editProfileGrid.load("Php/editProfileData.php",function(){
+                editProfileGrid.selectRow(0);
+            });
 
-//            myLayout.cells("b").setWidth(0);
-
-            var editProfileForm = myLayout.cells("c").attachForm();
-            myLayout.cells("c").setWidth(350);
-            myLayout.cells("c").showHeader();
-            myLayout.cells("c").setText("Edit Profile Form");
+            var editProfileForm = myLayout.cells("b").attachForm();
+            myLayout.cells("b").showHeader();
+            myLayout.cells("b").setText("Edit Profile Form");
             editProfileForm.loadStruct("data/editProfileForm.xml");
             editProfileForm.bind(editProfileGrid);
 
@@ -237,9 +243,49 @@
 
             editProfileForm.attachEvent("onButtonClick", function(){
                     editProfileForm.save();
+//                    showLoader();
             });
-            editProfileGrid.selectRow(0,true);
+
 //            myTree.selectItem("users");
+        }
+        function deleteItem(){
+            var treeItem = myTree.getSelectedItemId();
+            var grid;
+            if(treeItem == "drug"){
+                grid = drugGrid;
+            }
+            else if(treeItem == "drugRequests"){
+                grid = drugRequestsGrid;
+            }
+            else if(treeItem == "drugReports"){
+                grid = drugReportsGrid;
+            }
+            else if(treeItem == "user"){
+                grid = userGrid;
+            }
+
+                var rowId = grid.getSelectedRowId();
+                var rowIndex = grid.getRowIndex(rowId);
+                if(rowId!=null){
+                    grid.deleteRow(rowId);
+                    if(rowIndex!=(grid.getRowsNum()-1)){
+                        grid.selectRow(rowIndex+1,true);
+                    } else{
+                        grid.selectRow(rowIndex-1,true)
+                }
+            }
+        }
+        function showLoader(){
+            var interval = setInterval(function(){
+                $.mobile.loading('show');
+                clearInterval(interval);
+            });
+        }
+        function hideLoader(){
+            var interval = setInterval(function(){
+                $.mobile.loading('hide');
+                clearInterval(interval);
+            });
         }
 //        function signOut(){
 //            send("logout.php", "post", function(response){
