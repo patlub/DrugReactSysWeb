@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Drug Reaction</title>
     <script src="codebase/dhtmlx.js"></script>
+    <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
+    <link href="codebase/skins/terrace/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+            $.ajax({
+                dataType: "json",
+                url: "Php/isLoggedIn.php",
+                beforeSend: function () {
+                    var interval = setInterval(function () {
+                        $.mobile.loading('show');
+                        clearInterval(interval);
+                    });
+                },
+                success: function (data) {
+                    if (!data) {
+                        location.href = "web_signIn.html";
+                    }
+                },
+                complete: function () {
+                    var interval = setInterval(function () {
+                        $.mobile.loading('hide');
+                        clearInterval(interval);
+                    });
+                }
+            });
+    </script>
     <style>
         html, body{
             width: 100%;
@@ -14,8 +38,8 @@
             overflow: hidden;
             margin: 0px;
         }
-
     </style>
+    <title>Drug Reaction</title>
 </head>
 <body>
 <span id="fastclick">
@@ -41,7 +65,7 @@
                 addDrug();
             }
             else if(id=="addUser") {
-                addUser();
+                chechAndAddUser();
             }
             else if(id=="changePassword"){
                 changePassword();
@@ -50,10 +74,10 @@
                 editProfile();
             }
             else if(id=="delete"){
-                deleteItem();
+                checkUserTypeAndDelete();
             }
             else if(id=="signOut"){
-//                signOut();
+                signOut();
             }
         });
         myToolbar.loadStruct("data/toolbarStruct.xml");
@@ -75,7 +99,6 @@
                 createUserGrid();
             }
             return true;
-
         });
         myTree.loadXML("data/treeStruct.xml", function(){            //callback function
             myTree.selectItem("drug");   //makes 'drug' folder selected initially
@@ -178,6 +201,25 @@
             });
         }
 
+        function chechAndAddUser(){
+            $.ajax({
+                dataType: "json",
+                url: "Php/isUserType.php",
+                beforeSend: function () {
+                    showLoader();
+                },
+                success: function (data) {
+                    if(data){
+                        addUser();
+                    }else{
+                        alert("You are not authorized to Perform this action");
+                    }
+                },
+                complete: function () {
+                    hideLoader();
+                }
+            });
+        }
         function addUser(){
             var addUserForm = myLayout.cells("b").attachForm();
             myLayout.cells("b").showHeader();
@@ -264,17 +306,57 @@
                 grid = userGrid;
             }
 
-                var rowId = grid.getSelectedRowId();
-                var rowIndex = grid.getRowIndex(rowId);
-                if(rowId!=null){
-                    grid.deleteRow(rowId);
-                    if(rowIndex!=(grid.getRowsNum()-1)){
-                        grid.selectRow(rowIndex+1,true);
-                    } else{
-                        grid.selectRow(rowIndex-1,true)
+            var rowId = grid.getSelectedRowId();
+            var rowIndex = grid.getRowIndex(rowId);
+            if(rowId!=null){
+                grid.deleteRow(rowId);
+                if(rowIndex!=(grid.getRowsNum()-1)){
+                    grid.selectRow(rowIndex+1,true);
+                } else{
+                    grid.selectRow(rowIndex-1,true)
                 }
             }
         }
+
+        function signOut(){
+            $.ajax({
+                dataType: "json",
+                url: "Php/logout.php",
+                beforeSend: function () {
+                    showLoader();
+                },
+                success: function (data) {
+                    if (data) {
+                        location.href = "web_signIn.html";
+                    }
+                },
+                complete: function () {
+                    hideLoader();
+                }
+            });
+        }
+        function checkUserTypeAndDelete(){
+            $.ajax({
+                dataType: "json",
+                url: "Php/isUserType.php",
+                beforeSend: function () {
+                    showLoader();
+                },
+                success: function (data) {
+                    if(data){
+                        if (confirm("Are you sure you want to delete the selected item")) {
+                            deleteItem();
+                        }
+                    }else{
+                        alert("You are not authorized to perform this action");
+                    }
+                },
+                complete: function () {
+                    hideLoader();
+                }
+            });
+        }
+
         function showLoader(){
             var interval = setInterval(function(){
                 $.mobile.loading('show');
@@ -287,13 +369,6 @@
                 clearInterval(interval);
             });
         }
-//        function signOut(){
-//            send("logout.php", "post", function(response){
-//                if (response.xmlDoc.responseText) {
-//                    location.href = "Php/web_signIn.php";
-//                }
-//            });
-//        }
     });
 </script>
 </span>

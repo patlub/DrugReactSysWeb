@@ -109,8 +109,10 @@ class User{
         $user = $this->checkCredentials();
         if($user) {
             $this->_user = $user;
+            $_SESSION['loggedIn'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $this->_email;
+            $_SESSION['user_type']  = $user['accountType'];
             return $user['id'];
         }
         return false;
@@ -145,6 +147,8 @@ class User{
             $statementHandler = $dbh->prepare('SELECT LAST_INSERT_ID()');
             $statementHandler->execute();
             $LastRow = $statementHandler->fetch(PDO::FETCH_ASSOC);
+
+            $_SESSION['loggedIn'] = true;
             $_SESSION['user_id'] = $LastRow['LAST_INSERT_ID()'];
             $_SESSION['user_email'] = $this->_email;
 
