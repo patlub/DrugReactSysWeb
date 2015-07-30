@@ -42,6 +42,7 @@
     <title>Drug Reaction</title>
 </head>
 <body>
+<div id="form_container" style=""></div>
 <span id="fastclick">
 <script type="text/javascript">
     dhtmlxEvent(window,"load",function(){
@@ -184,10 +185,24 @@
         }
 
         function addDrug(){
-            var addDrugForm = myLayout.cells("b").attachForm();
+            myTree.selectItem("drugs");
+            var formData = [
+                {type:"settings",position:"label-top", inputWidth:"250"},
+                {type:"fieldset", name:"data", label:"", inputWidth:400,
+                    list:[
+                        {type:"input",    name:'drugName',      label:'Drug Name',               validate:"NotEmpty", offsetLeft:"15"},
+                        {type:"input",    name:'sickness',      label:'Sickness',                validate:"NotEmpty", offsetLeft:"15"},
+                        {type:"input",    name:'sideSigns',     label:'Side Effects (Signs)',    validate:"NotEmpty", offsetLeft:"15", rows:5},
+                        {type:"input",    name:'sideSymptoms',  label:'Side Effects (Symptoms)', validate:"NotEmpty", offsetLeft:"15", rows:5},
+                        {type:"input",    name:'dosage',        label:'Dosage',                  validate:"NotEmpty", offsetLeft:"15"},
+                        {type:"button",   name:"submitDrug",    value:"Submit Drug",             offsetLeft:"200", offsetTop:"20", offsetRight:"20"}
+                    ]
+                }
+            ];
+            addDrugForm = myLayout.cells("b").attachForm();
+            addDrugForm.loadStruct(formData, "json");
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Add Drug");
-            addDrugForm.loadStruct("data/addDrugForm.xml");
 
             var dp = new dataProcessor("Php/drugData.php");
             dp.init(addDrugForm);
@@ -221,10 +236,30 @@
             });
         }
         function addUser(){
-            var addUserForm = myLayout.cells("b").attachForm();
+            var formData = [
+                {type:"settings",position:"label-top", inputWidth:"250"},
+                {type:"fieldset", name:"data", label:"", inputWidth:400,
+                    list:[
+                        {type:"input",    name:'firstName',   label:'First Name',       validate:"NotEmpty", offsetLeft:"15", offsetTop:"10"},
+                        {type:"input",    name:'lastName',    label:'Last Name',        validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"input",    name:'email',       label:'Email',            validate:"NotEmpty,ValidEmail", offsetLeft:"15", offsetTop:"5"},
+                        {type:"select",   name:'accountType', label:'Account Type',     offsetLeft:"15", options:[
+                            {text:"Admin",    value:"admin"},
+                            {text:"Standard", value:"standard", selected:true}
+                        ], offsetTop:"5"},
+                        {type:"password", name:'password',    label:'Password',         validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"password", name:'confirm',     label:'Confirm Password', validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"button",   name:"submitUser",  value:"Submit",           offsetLeft:"200", offsetTop:"20", offsetRight:"20"}
+                    ]
+                }
+            ];
+
+            addUserForm = myLayout.cells("b").attachForm();
+            addUserForm.loadStruct(formData, "json");
+            addUserForm.enableLiveValidation(true);
+            addUserForm.setFontSize(16+"px");
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Add User");
-            addUserForm.loadStruct("data/addUserForm.xml");
 
             var dp = new dataProcessor("Php/userData.php");
             dp.init(addUserForm);
@@ -232,25 +267,55 @@
 
             addUserForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitUser") {
+                    var pass = addUserForm.getItemValue("password");
+                    var confirmPass = addUserForm.getItemValue("confirm");
+
+                    if(pass != confirmPass) {
+                        alert("Password Fields don't match");
+                        return 0;
+                    }
                     addUserForm.save();
-                    myTree.selectItem("users");
+                    showLoader();
+
+                    setTimeout(function(){
+                        myTree.selectItem("users");
+                        hideLoader();
+                    },5000);
                 }
             });
         }
 
         function changePassword(){
-            var changePasswordForm = myLayout.cells("b").attachForm();
+            var formData = [
+                {type:"settings",position:"label-top", inputWidth:"250"},
+                {type:"fieldset", name:"data", label:"", inputWidth:400,
+                    list:[
+                        {type:"password", name:'currentPassword', label:'Current Password',     validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"password", name:'password',        label:'New Password',         validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"password", name:'confirm',         label:'Re-Type New Password', validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"button",   name:"updatePassword",  value:"Update",               offsetLeft:"200", offsetTop:"20", offsetRight:"20"}
+                    ]
+                }
+            ];
+
+            changePasswordForm = myLayout.cells("b").attachForm();
+            changePasswordForm.loadStruct(formData, "json");
+            changePasswordForm.enableLiveValidation(true);
+            changePasswordForm.setFontSize(16+"px");
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Change Password");
-            changePasswordForm.loadStruct("data/changePasswordForm.xml");
 
             myTree.selectItem("user");
-            var msg;
+
             changePasswordForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "updatePassword") {
                     changePasswordForm.send("Php/changePassword.php", "post", function(response){
+                        showLoader();
                         if(response.xmlDoc.responseText == true){
-                            myTree.selectItem("users");
+                            setTimeout(function(){
+                                myTree.selectItem("users");
+                                hideLoader();
+                            },5000);
                         }else{
                             alert("Network Error");
                         }
@@ -302,7 +367,7 @@
             else if(treeItem == "drugReports"){
                 grid = drugReportsGrid;
             }
-            else if(treeItem == "user"){
+            else if(treeItem == "users"){
                 grid = userGrid;
             }
 
