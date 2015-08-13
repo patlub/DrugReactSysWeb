@@ -5,7 +5,7 @@ require_once("config.php");
 
 $grid = new GridConnector($conn, "MySQL");
 $grid->render_table(
-    "drugrequests","id","reqSickness,reqSigns,reqSymptoms,sicknessPeriod,status,answer"
+    "drugrequests","id","reqSickness,reqSigns,reqSymptoms,sicknessPeriod,status,answer,count"
 );
 
 ?>

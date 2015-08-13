@@ -5,9 +5,12 @@
     <script src="codebase/dhtmlx.js"></script>
     <link href="codebase/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
     <link href="codebase/skins/Green/dhtmlx.css" rel="STYLESHEET" type="text/css"/>
-    <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />-->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <!--<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css"/>-->
+    <!--<script src="jquery/jquery-1.11.1.min.js"></script>-->
+    <!--<script src="jquery/jquery.mobile-1.4.5.min.js"></script>-->
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <style>
     html, body{
@@ -16,7 +19,6 @@
         overflow: hidden;
         margin: 0px;
         background-color: #90A9B9;
-        color: #ffffff;
     }
     </style>
 </head>
@@ -27,7 +29,6 @@
 <div id="form_container" style="width:200px; padding-top: 100px; padding-left: 40%;"></div>
 <script type="text/javascript">
     dhtmlxEvent(window, "load", function(){
-        resObj = document.getElementById("res");
         var formData = [
             {type:"settings",position:"label-top", inputWidth:"220"},
             {type:"fieldset", name:"data", label:"Drug Reaction Login", inputWidth:300,
@@ -39,22 +40,38 @@
             }
         ];
 
-        loginForm = new dhtmlXForm("form_container", formData);
+        var loginForm = new dhtmlXForm("form_container", formData);
         loginForm.setFontSize(16+"px");
         loginForm.attachEvent("onButtonClick", function(buttonId){
             if(buttonId == "signIn") {
+                if(loginForm.validate()) {
+                    showLoader();
+                }
                 login();
             }
         });
 
         function login(){
             loginForm.send("Php/login.php", "post", function(response){
-                var msg;
                 if (response.xmlDoc.responseText==true) {
+                    hideLoader();
                     location.href = "index.html";
                 } else {
                     $('.Error').fadeIn(400).delay(3000).fadeOut(400);
+                    hideLoader();
                 }
+            });
+        }
+        function showLoader(){
+            var interval = setInterval(function(){
+                $.mobile.loading('show');
+                clearInterval(interval);
+            });
+        }
+        function hideLoader(){
+            var interval = setInterval(function(){
+                $.mobile.loading('hide');
+                clearInterval(interval);
             });
         }
     });

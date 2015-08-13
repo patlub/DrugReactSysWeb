@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <!--<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css"/>-->
+    <!--<script src="jquery/jquery-1.11.1.min.js"></script>-->
+    <!--<script src="jquery/jquery.mobile-1.4.5.min.js"></script>-->
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
             $.ajax({
@@ -38,6 +41,10 @@
             overflow: hidden;
             margin: 0px;
         }
+        .drug{
+            color: #aaa;
+            display: block;
+        }
     </style>
     <title>Drug Reaction</title>
 </head>
@@ -51,9 +58,11 @@
         var drugRequestsGrid;
         var drugReportsGrid;
         var userGrid;
+        var drugReportsChart;
+        var drugRequestsChart;
 
         //Layout
-        var myLayout = new dhtmlXLayoutObject(document.body, "2U");
+        var myLayout = new dhtmlXLayoutObject(document.body, "3L");
         myLayout.cells("a").setWidth(250);
         myLayout.cells("a").setText("Files");
         myLayout.cells("b").hideHeader();
@@ -91,9 +100,11 @@
                 createDrugGrid();
             }
             else if(id=="drugReports"){
+                createDrugReportsChart();
                 createDrugReportsGrid();
             }
             else if(id=="drugRequests"){
+                createDrugRequestsChart();
                 createDrugRequestsGrid();
             }
             else if(id=="users"){
@@ -129,20 +140,47 @@
             myLayout.cells("b").setText("Drug Reports");
             drugReportsGrid.setImagePath("codebase/imgs/");
             drugReportsGrid.setIconsPath("icons/");
-            drugReportsGrid.setHeader("Drug,Sickness,Dosage,Signs,Symptoms,Period,Status,Answer");
-            drugReportsGrid.setColTypes("ro,ro,ro,ro,ro,ro,coro,txt");
-            drugReportsGrid.setInitWidths("*,*,*,*,*,*,*,200");
-            drugReportsGrid.setColAlign("left,left,left,left,left,left,left,left");
+            drugReportsGrid.setHeader("Drug,Sickness,Dosage,Signs,Symptoms,Period,Status,Answer,count");
+            drugReportsGrid.setColTypes("ed,ed,ed,ed,ed,ed,coro,txt,ro");
+            drugReportsGrid.setInitWidths("*,*,*,*,*,*,*,200,*");
+            drugReportsGrid.setColAlign("left,left,left,left,left,left,left,left,left");
             drugReportsGrid.enableMultiline(true);
             drugReportsGrid.enableDragAndDrop(true);
             drugReportsGrid.init();
             drugReportsGrid.load("Php/drugReportsData.php",function(){
+                drugReportsGrid.setColumnHidden(8,true);
                 drugReportsGrid.setRowHidden(drugReportsGrid.getRowId(0),true);
                 drugReportsGrid.setRowHidden(drugReportsGrid.getRowId(1),true);
+                drugReportsChart.parse(drugReportsGrid,"dhtmlxgrid");
             });
 
             var dp = new dataProcessor("Php/drugReportsData.php");
             dp.init(drugReportsGrid);
+        }
+
+        function createDrugReportsChart(){
+                drugReportsChart = myLayout.cells("c").attachChart({
+                view:"bar",                                      //defines the chart's type
+                value:"#data8#",                  //data property that the chart represents
+                tooltip:"#id#",
+                color:"#36abee",                            //the color of the chart's bars
+                label:"#data8#",
+                padding:{left:75, bottom:50, top:50, right:30},//padding of chart's content
+                yAxis:{start:0, step:2, title:"Drug Occurences"},    //sets the vertical scale
+                xAxis:{                                         //sets the horizontal scale
+                    template:function(obj){
+                        return obj.id.substr(0,4);
+                    }
+                },
+                group:{
+                    by:"#data0#",
+                    map:{
+                        data8:["#data8#","sum"]
+                    }
+                },
+                preset:"column",                               //applies the styling preset
+                border:0                                           //disables bars' borders
+            });
         }
 
         function createDrugRequestsGrid(){
@@ -151,19 +189,46 @@
             myLayout.cells("b").setText("Drug Requests");
             drugRequestsGrid.setImagePath("codebase/imgs/");
             drugRequestsGrid.setIconsPath("icons/");
-            drugRequestsGrid.setHeader("Sickness,Signs,Symptoms,Duration,status,answer");
-            drugRequestsGrid.setColTypes("ro,ro,ro,ro,coro,txt");
-            drugRequestsGrid.setInitWidths("*,*,*,82,80,300");
-            drugRequestsGrid.setColAlign("left,left,left,left");
+            drugRequestsGrid.setHeader("Sickness,Signs,Symptoms,Duration,status,answer,count");
+            drugRequestsGrid.setColTypes("ed,ed,ed,ed,coro,txt,ro");
+            drugRequestsGrid.setInitWidths("*,*,*,82,80,300,*");
+            drugRequestsGrid.setColAlign("left,left,left,left,left");
             drugRequestsGrid.enableMultiline(true);
             drugRequestsGrid.enableDragAndDrop(true);
             drugRequestsGrid.init();
             drugRequestsGrid.load("Php/drugRequestsData.php", function(){
+                drugRequestsGrid.setColumnHidden(6,true);
                 drugRequestsGrid.setRowHidden(drugRequestsGrid.getRowId(0),true);
                 drugRequestsGrid.setRowHidden(drugRequestsGrid.getRowId(1),true);
+                drugRequestsChart.parse(drugRequestsGrid,"dhtmlxgrid");
             });
             var dp = new dataProcessor("Php/drugRequestsData.php");
             dp.init(drugRequestsGrid);
+        }
+
+        function createDrugRequestsChart(){
+            drugRequestsChart = myLayout.cells("c").attachChart({
+                view:"bar",                                      //defines the chart's type
+                value:"#data6#",                  //data property that the chart represents
+                tooltip:"#id#",
+                color:"#36abee",                            //the color of the chart's bars
+                label:"#data6#",
+                padding:{left:75, bottom:50, top:50, right:30},//padding of chart's content
+                yAxis:{start:0, step:2, title:"Sickness Occurences"},    //sets the vertical scale
+                xAxis:{                                         //sets the horizontal scale
+                    template:function(obj){
+                        return obj.id.substr(0,4);
+                    }
+                },
+                group:{
+                    by:"#data0#",
+                    map:{
+                        data6:["#data6#","sum"]
+                    }
+                },
+                preset:"column",                               //applies the styling preset
+                border:0                                           //disables bars' borders
+            });
         }
 
         function createUserGrid(){
@@ -172,10 +237,10 @@
             myLayout.cells("b").setText("Users");
             userGrid.setImagePath("codebase/imgs/");
             userGrid.setIconsPath("icons/");
-            userGrid.setHeader("First name, Last name, Email, Password, Account Type");
-            userGrid.setColTypes("ro,ro,ro,ro,ro");
+            userGrid.setHeader("First name, Last name, Email, Account Type");
+            userGrid.setColTypes("ro,ro,ro,ro");
             userGrid.setInitWidths("*,*,*,*,*");
-            userGrid.setColAlign("left,left,left,left,left");
+            userGrid.setColAlign("left,left,left,left");
             userGrid.enableMultiline(true);
             userGrid.enableDragAndDrop(true);
             userGrid.init();
@@ -309,6 +374,13 @@
 
             changePasswordForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "updatePassword") {
+                    var pass = addUserForm.getItemValue("password");
+                    var confirmPass = addUserForm.getItemValue("confirm");
+
+                    if(pass != confirmPass) {
+                        alert("Password Fields don't match");
+                        return 0;
+                    }
                     changePasswordForm.send("Php/changePassword.php", "post", function(response){
                         showLoader();
                         if(response.xmlDoc.responseText == true){
@@ -339,21 +411,37 @@
                 editProfileGrid.selectRow(0);
             });
 
-            var editProfileForm = myLayout.cells("b").attachForm();
+            var formData = [
+                {type:"settings",position:"label-top", inputWidth:"250"},
+                {type:"fieldset", name:"data", label:"", inputWidth:400,
+                    list:[
+                        {type:"input",  name:'firstName', label:'First Name', validate:"NotEmpty", offsetLeft:"15", offsetTop:"10"},
+                        {type:"input",  name:'lastName',  label:'Last Name',  validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"input",  name:'email',     label:'Email',      validate:"NotEmpty,ValidEmail", offsetLeft:"15", offsetTop:"5"},
+                        {type:"button", name:"save",      value:"Save",       offsetLeft:"200", offsetTop:"20", offsetRight:"20"}
+                    ]
+                }
+            ];
+
+            editProfileForm = myLayout.cells("b").attachForm();
+            editProfileForm.loadStruct(formData, "json");
+            editProfileForm.enableLiveValidation(true);
+            editProfileForm.setFontSize(16+"px");
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Edit Profile Form");
-            editProfileForm.loadStruct("data/editProfileForm.xml");
             editProfileForm.bind(editProfileGrid);
 
             var dp = new dataProcessor("Php/editProfileData.php");
             dp.init(editProfileGrid);
 
             editProfileForm.attachEvent("onButtonClick", function(){
-                    editProfileForm.save();
-//                    showLoader();
+                showLoader();
+                editProfileForm.save();
+                setTimeout(function(){
+                    myTree.selectItem("users");
+                    hideLoader();
+                },5000);
             });
-
-//            myTree.selectItem("users");
         }
         function deleteItem(){
             var treeItem = myTree.getSelectedItemId();
