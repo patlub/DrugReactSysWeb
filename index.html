@@ -124,14 +124,18 @@
             drugGrid.setIconsPath("icons/");
             drugGrid.setHeader("Name, Sickness,Side Effects(Signs),SIde Effects(Symptoms), Dosage");
             drugGrid.setColTypes("ed,ed,ed,ed,ed");
+            drugGrid.attachHeader("#connector_text_filter,#connector_text_filter");
+            drugGrid.setColSorting("connector,connector");
             drugGrid.setInitWidths("150,100,*,*,*");
             drugGrid.setColAlign("left,left,left,left,left");
             drugGrid.enableMultiline(true);
             drugGrid.enableDragAndDrop(true);
             drugGrid.init();
+            drugGrid.enableSmartRendering(true);
             drugGrid.loadXML("Php/drugData.php");
             var dp = new dataProcessor("Php/drugData.php");
             dp.init(drugGrid);
+
         }
 
         function createDrugReportsGrid(){
@@ -142,11 +146,14 @@
             drugReportsGrid.setIconsPath("icons/");
             drugReportsGrid.setHeader("Drug,Sickness,Dosage,Signs,Symptoms,Period,Status,Answer,count");
             drugReportsGrid.setColTypes("ed,ed,ed,ed,ed,ed,coro,txt,ro");
+            drugReportsGrid.attachHeader("#connector_text_filter, #connector_text_filter");
+            drugReportsGrid.setColSorting("connector, connector");
             drugReportsGrid.setInitWidths("*,*,*,*,*,*,*,200,*");
             drugReportsGrid.setColAlign("left,left,left,left,left,left,left,left,left");
             drugReportsGrid.enableMultiline(true);
             drugReportsGrid.enableDragAndDrop(true);
             drugReportsGrid.init();
+            drugReportsGrid.enableSmartRendering(true);
             drugReportsGrid.load("Php/drugReportsData.php",function(){
                 drugReportsGrid.setColumnHidden(8,true);
                 drugReportsGrid.setRowHidden(drugReportsGrid.getRowId(0),true);
@@ -191,11 +198,14 @@
             drugRequestsGrid.setIconsPath("icons/");
             drugRequestsGrid.setHeader("Sickness,Signs,Symptoms,Duration,status,answer,count");
             drugRequestsGrid.setColTypes("ed,ed,ed,ed,coro,txt,ro");
+            drugRequestsGrid.attachHeader("#connector_text_filter, #connector_text_filter");
+            drugRequestsGrid.setColSorting("connector, connector");
             drugRequestsGrid.setInitWidths("*,*,*,82,80,300,*");
             drugRequestsGrid.setColAlign("left,left,left,left,left");
             drugRequestsGrid.enableMultiline(true);
             drugRequestsGrid.enableDragAndDrop(true);
             drugRequestsGrid.init();
+            drugRequestsGrid.enableSmartRendering(true);
             drugRequestsGrid.load("Php/drugRequestsData.php", function(){
                 drugRequestsGrid.setColumnHidden(6,true);
                 drugRequestsGrid.setRowHidden(drugRequestsGrid.getRowId(0),true);
@@ -239,11 +249,14 @@
             userGrid.setIconsPath("icons/");
             userGrid.setHeader("First name, Last name, Email, Account Type");
             userGrid.setColTypes("ro,ro,ro,ro");
+            userGrid.attachHeader("#connector_text_filter, #connector_text_filter");
+            userGrid.setColSorting("connector, connector");
             userGrid.setInitWidths("*,*,*,*,*");
             userGrid.setColAlign("left,left,left,left");
             userGrid.enableMultiline(true);
             userGrid.enableDragAndDrop(true);
             userGrid.init();
+            userGrid.enableSmartRendering(true);
             userGrid.load("Php/userData.php");
             var dp = new dataProcessor("Php/userData.php");
             dp.init(userGrid);
@@ -264,7 +277,7 @@
                     ]
                 }
             ];
-            addDrugForm = myLayout.cells("b").attachForm();
+            var addDrugForm = myLayout.cells("b").attachForm();
             addDrugForm.loadStruct(formData, "json");
             myLayout.cells("b").showHeader();
             myLayout.cells("b").setText("Add Drug");
@@ -276,7 +289,12 @@
             addDrugForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "submitDrug") {
                     addDrugForm.save();
-                    myTree.selectItem("drug");
+                    showLoader();
+
+                    setTimeout(function(){
+                        myTree.selectItem("drug");
+                        hideLoader();
+                    },4000);
                 }
             });
         }
@@ -363,7 +381,7 @@
                 }
             ];
 
-            changePasswordForm = myLayout.cells("b").attachForm();
+            var changePasswordForm = myLayout.cells("b").attachForm();
             changePasswordForm.loadStruct(formData, "json");
             changePasswordForm.enableLiveValidation(true);
             changePasswordForm.setFontSize(16+"px");
@@ -397,7 +415,6 @@
         }
 
         function editProfile(){
-//            var editProfileGrid = myLayout.cells("c").attachGrid();
             var editProfileGrid = new dhtmlXGridObject();
             editProfileGrid.setImagePath("codebase/imgs/");
             editProfileGrid.setIconPath("icons/");
@@ -423,7 +440,7 @@
                 }
             ];
 
-            editProfileForm = myLayout.cells("b").attachForm();
+            var editProfileForm = myLayout.cells("b").attachForm();
             editProfileForm.loadStruct(formData, "json");
             editProfileForm.enableLiveValidation(true);
             editProfileForm.setFontSize(16+"px");

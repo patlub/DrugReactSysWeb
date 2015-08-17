@@ -45,8 +45,10 @@
         loginForm.attachEvent("onButtonClick", function(buttonId){
             if(buttonId == "signIn") {
                 if(loginForm.validate()) {
+                    loginForm.lock();
                     showLoader();
                 }
+
                 login();
             }
         });
@@ -58,6 +60,7 @@
                     location.href = "index.html";
                 } else {
                     $('.Error').fadeIn(400).delay(3000).fadeOut(400);
+                    loginForm.unlock();
                     hideLoader();
                 }
             });
