@@ -111,11 +111,12 @@ class Drug {
     public function reportDrug(){
         $dbh = $this->connectDB();
         $statementHandler = $dbh->prepare('INSERT INTO drugreports VALUES (:id, :drugName, :sickness, :dosage, :signs,
-                                                                          :symptoms, :medPeriod, :userId, :date, :status, :answer)');
+                                                                          :symptoms, :medPeriod, :userId, :date, :status, :answer, :count )');
         $id = '';
         $date = date('Y-m-d');
         $status = 'pending';
         $answer = '';
+        $count = 1;
         $statementHandler->bindParam(':id', $id);
         $statementHandler->bindParam(':drugName', $this->_drugName);
         $statementHandler->bindParam(':sickness', $this->_sickness);
@@ -127,6 +128,7 @@ class Drug {
         $statementHandler->bindParam(':date', $date);
         $statementHandler->bindParam(':status', $status);
         $statementHandler->bindParam(':answer', $answer);
+        $statementHandler->bindParam(':count', $count);
         $result = $statementHandler->execute();
         if($result){
             return $result;
@@ -140,11 +142,12 @@ class Drug {
     public function requestDrug(){
         $dbh = $this->connectDB();
         $statementHandler = $dbh->prepare('INSERT INTO drugrequests VALUES (:id, :sickness, :signs, :symptoms,
-                                                            :sicknessPeriod, :date, :userId, :status, :answer)');
+                                                            :sicknessPeriod, :date, :userId, :status, :answer, :count)');
         $id = '';
         $date = date('Y-m-d');
         $status = 'pending';
         $answer = '';
+        $count = 1;
         $statementHandler->bindParam(':id', $id);
         $statementHandler->bindParam(':sickness', $this->_sickness);
         $statementHandler->bindParam(':signs', $this->_signs);
@@ -154,6 +157,7 @@ class Drug {
         $statementHandler->bindParam(':userId', $this->_userId);
         $statementHandler->bindParam(':status', $status);
         $statementHandler->bindParam(':answer', $answer);
+        $statementHandler->bindParam(':count', $count);
         $result = $statementHandler->execute();
         if($result){
             return $result;

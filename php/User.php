@@ -90,7 +90,7 @@ class User{
         $this->_userType = $userType;
     }
     /*
-     * Sets the fields of an existing user who may be logging in
+     * Sets the fields of an existing user in the Database who may be logging in
      * @param $email, Existing User's email
      * @param $password, Existing User's password
      *
@@ -109,11 +109,31 @@ class User{
         $user = $this->checkCredentials();
         if($user) {
             $this->_user = $user;
+            $_SESSION['user'] = $user;
             $_SESSION['loggedIn'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $this->_email;
             $_SESSION['user_type']  = $user['accountType'];
+            $_SESSION['password'] = $user['password'];
             return $user['id'];
+        }
+        return false;
+    }
+    /*
+     * Checks for user validity from the database
+     * @return returns the user Object
+     *
+     */
+    protected function checkCredentials(){
+        $dbh = $this->connectDB();
+        $statementHandler = $dbh->prepare('SELECT * FROM users WHERE email = :email');
+        $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
+        $statementHandler->execute();
+        if($statementHandler->rowCount() > 0){
+            $user = $statementHandler->fetch(PDO::FETCH_ASSOC);
+            if($this->_password == $user['password']){
+                return $user;
+            }
         }
         return false;
     }
@@ -156,32 +176,19 @@ class User{
         }
         return false;
     }
-    /*
-     * Checks for user validity from the database
-     * @return returns the user Object
-     *
-     */
-    protected function checkCredentials(){
-        $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('SELECT * FROM users WHERE email = :email');
-        $statementHandler->bindParam(':email',$this->_email,PDO::PARAM_STR);
-        $statementHandler->execute();
-        if($statementHandler->rowCount() > 0){
-            $user = $statementHandler->fetch(PDO::FETCH_ASSOC);
-            if($this->_password == $user['password']){
-                return $user;
+
+    public function changePassword($newPassword){
+        if($this->_password == $_SESSION['password']){
+            $dbh = $this->connectDB();
+            $statementHandler = $dbh->prepare('UPDATE users SET password = :password WHERE id = :id');
+            $statementHandler->bindParam(':id',$_SESSION['user_id'],PDO::PARAM_INT);
+            $statementHandler->bindParam(':password',$newPassword,PDO::PARAM_STR);
+            $result = $statementHandler->execute();
+            if($result){
+                $_SESSION['password'] = $newPassword;
+                return $result;
             }
-        }
-        return false;
-    }
-    public function changePassword(){
-        $dbh = $this->connectDB();
-        $statementHandler = $dbh->prepare('UPDATE users SET password = :password WHERE id = :id');
-        $statementHandler->bindParam(':id',$_SESSION['user_id'],PDO::PARAM_INT);
-        $statementHandler->bindParam(':password',$this->_password,PDO::PARAM_STR);
-        $result = $statementHandler->execute();
-        if($result){
-            return $result;
+            return false;
         }
         return false;
     }

@@ -146,8 +146,8 @@
             drugReportsGrid.setIconsPath("icons/");
             drugReportsGrid.setHeader("Drug,Sickness,Dosage,Signs,Symptoms,Period,Status,Answer,count");
             drugReportsGrid.setColTypes("ed,ed,ed,ed,ed,ed,coro,txt,ro");
-            drugReportsGrid.attachHeader("#connector_text_filter, #connector_text_filter");
-            drugReportsGrid.setColSorting("connector, connector");
+            drugReportsGrid.attachHeader("#connector_text_filter,#connector_text_filter");
+            drugReportsGrid.setColSorting("connector,connector");
             drugReportsGrid.setInitWidths("*,*,*,*,*,*,*,200,*");
             drugReportsGrid.setColAlign("left,left,left,left,left,left,left,left,left");
             drugReportsGrid.enableMultiline(true);
@@ -198,8 +198,8 @@
             drugRequestsGrid.setIconsPath("icons/");
             drugRequestsGrid.setHeader("Sickness,Signs,Symptoms,Duration,status,answer,count");
             drugRequestsGrid.setColTypes("ed,ed,ed,ed,coro,txt,ro");
-            drugRequestsGrid.attachHeader("#connector_text_filter, #connector_text_filter");
-            drugRequestsGrid.setColSorting("connector, connector");
+            drugRequestsGrid.attachHeader("#connector_text_filter,#connector_text_filter");
+            drugRequestsGrid.setColSorting("connector,connector");
             drugRequestsGrid.setInitWidths("*,*,*,82,80,300,*");
             drugRequestsGrid.setColAlign("left,left,left,left,left");
             drugRequestsGrid.enableMultiline(true);
@@ -249,8 +249,8 @@
             userGrid.setIconsPath("icons/");
             userGrid.setHeader("First name, Last name, Email, Account Type");
             userGrid.setColTypes("ro,ro,ro,ro");
-            userGrid.attachHeader("#connector_text_filter, #connector_text_filter");
-            userGrid.setColSorting("connector, connector");
+            userGrid.attachHeader("#connector_text_filter,#connector_text_filter,#connector_text_filter");
+            userGrid.setColSorting("connector,connector,connector");
             userGrid.setInitWidths("*,*,*,*,*");
             userGrid.setColAlign("left,left,left,left");
             userGrid.enableMultiline(true);
@@ -374,7 +374,7 @@
                 {type:"fieldset", name:"data", label:"", inputWidth:400,
                     list:[
                         {type:"password", name:'currentPassword', label:'Current Password',     validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
-                        {type:"password", name:'password',        label:'New Password',         validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
+                        {type:"password", name:'newPassword',     label:'New Password',         validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
                         {type:"password", name:'confirm',         label:'Re-Type New Password', validate:"NotEmpty", offsetLeft:"15", offsetTop:"5"},
                         {type:"button",   name:"updatePassword",  value:"Update",               offsetLeft:"200", offsetTop:"20", offsetRight:"20"}
                     ]
@@ -392,8 +392,8 @@
 
             changePasswordForm.attachEvent("onButtonClick", function(buttonId){
                 if(buttonId == "updatePassword") {
-                    var pass = addUserForm.getItemValue("password");
-                    var confirmPass = addUserForm.getItemValue("confirm");
+                    var pass = changePasswordForm.getItemValue("newPassword");
+                    var confirmPass = changePasswordForm.getItemValue("confirm");
 
                     if(pass != confirmPass) {
                         alert("Password Fields don't match");
@@ -401,14 +401,17 @@
                     }
                     changePasswordForm.send("Php/changePassword.php", "post", function(response){
                         showLoader();
-                        if(response.xmlDoc.responseText == true){
+                        var msg;
+                        if(msg=response.xmlDoc.responseText == true){
                             setTimeout(function(){
                                 myTree.selectItem("users");
                                 hideLoader();
                             },5000);
                         }else{
                             alert("Network Error");
+                            hideLoader();
                         }
+                        alert(msg);
                     });
                 }
             });

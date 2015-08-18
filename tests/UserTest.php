@@ -59,5 +59,13 @@ class UserTest extends PHPUnit_Framework_TestCase{
         $this->assertEquals("1",$result);
         $this->assertTrue(isset($_SESSION['user_id']));
     }
+    public function testChangePassword(){
+        $user = $this->existingUser;
+        $user->setEmail("patricklu2010@gmail.com");
+        $user->setPassword("yes");
+        $user->login();
+        $result = $user->changePassword('yes','pl');
+        $this->assertTrue($result);
+    }
 }
 ?>
